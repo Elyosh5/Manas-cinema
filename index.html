@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Кинотеатр Манас — Бишкек</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+        line-height: 1.6;
+      }
+
+      header {
+        background: linear-gradient(135deg, #8b0000 0%, #a00000 100%);
+        color: #fff;
+        text-align: center;
+        padding: 35px 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      header p {
+        font-size: 1.2em;
+        opacity: 0.95;
+      }
+
+      nav {
+        background: #5a0000;
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        flex-wrap: wrap;
+      }
+
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1em;
+        transition: all 0.3s ease;
+        padding: 5px 10px;
+        border-radius: 5px;
+      }
+
+      nav a:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .section {
+        padding: 40px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2em;
+        color: #333;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .cards-container {
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+
+      .movie-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        max-width: 250px;
+      }
+
+      .movie-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+      }
+
+      .movie-card img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 2/3;
+        object-fit: cover;
+        cursor: pointer;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+      }
+
+      .movie-card img:hover {
+        transform: scale(1.05);
+      }
+
+      .movie-card h3 {
+        margin-top: 15px;
+        color: #8b0000;
+        font-size: 1.2em;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 20px;
+        overflow-y: auto;
+      }
+
+      .modal-content {
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        gap: 12px;
+        background: #fff;
+        padding: 30px;
+        width: 100%;
+        max-width: 500px;
+        border-radius: 15px;
+        text-align: left;
+        position: relative;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        margin: auto;
+      }
+
+      .modal-content h3 {
+        text-align: center;
+        color: #8b0000;
+        margin: 5px 0px;
+        font-size: 1.8em;
+      }
+
+      .modal-content img {
+        align-self: center;
+        width: 100%;
+        max-width: 250px;
+        height: auto;
+        aspect-ratio: 2/3;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .modal-content p {
+        font-size: 1em;
+        color: #333;
+        line-height: 1.8;
+      }
+
+      .modal-content b {
+        color: #8b0000;
+      }
+
+      .modal-content a {
+        display: inline-block;
+        background: #8b0000;
+        color: white;
+        padding: 12px 20px;
+        text-decoration: none;
+        border-radius: 8px;
+        text-align: center;
+        margin-top: 10px;
+        transition: background 0.3s ease;
+        font-weight: bold;
+      }
+
+      .modal-content a:hover {
+        background: #a00000;
+      }
+
+      .close {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 32px;
+        cursor: pointer;
+        color: #8b0000;
+        transition: color 0.3s ease;
+        font-weight: bold;
+      }
+
+      .close:hover {
+        color: #c00000;
+      }
+
+      .schedule {
+        padding: 40px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .schedule-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .schedule-table th {
+        background: #8b0000;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        font-size: 1.1em;
+      }
+
+      .schedule-table td {
+        border: 1px solid #ddd;
+        padding: 15px;
+        text-align: center;
+        font-size: 0.95em;
+      }
+
+      .schedule-table tr:nth-child(even) {
+        background: #f9f9f9;
+      }
+
+      .schedule-table tr:hover {
+        background: #f0f0f0;
+      }
+
+      footer {
+        background: linear-gradient(135deg, #8b0000 0%, #a00000 100%);
+        color: #fff;
+        text-align: center;
+        padding: 20px;
+        margin-top: 40px;
+        box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        font-size: 1.1em;
+      }
+
+      @media (max-width: 768px) {
+        header h1 {
+          font-size: 1.8em;
+        }
+
+        header p {
+          font-size: 1em;
+        }
+
+        nav {
+          gap: 20px;
+          padding: 10px;
+        }
+
+        nav a {
+          font-size: 1em;
+        }
+
+        h2 {
+          font-size: 1.5em;
+        }
+
+        .cards-container {
+          gap: 20px;
+        }
+
+        .movie-card {
+          max-width: 100%;
+          width: 280px;
+        }
+
+        .schedule-table {
+          font-size: 0.85em;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+          padding: 10px 5px;
+        }
+
+        .modal-content {
+          padding: 20px;
+          max-width: 95%;
+        }
+
+        .modal-content h3 {
+          font-size: 1.4em;
+        }
+      }
+
+      @media (max-width: 480px) {
+        header h1 {
+          font-size: 1.5em;
+        }
+
+        nav {
+          gap: 15px;
+        }
+
+        nav a {
+          font-size: 0.9em;
+        }
+
+        h2 {
+          font-size: 1.3em;
+        }
+
+        .schedule-table {
+          font-size: 0.75em;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+          padding: 8px 3px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Кинотеатр «Манас» — Бишкек</h1>
+      <p>Добро пожаловать в мир кино!</p>
+    </header>
+
+    <nav>
+      <a href="#">Главная</a>
+      <a href="#">Афиша</a>
+      <a href="#">Сеансы</a>
+      <a href="#">Контакты</a>
+    </nav>
+
+    <section class="section">
+      <h2>Афиша недели</h2>
+      <div class="cards-container">
+        <div class="movie-card">
+          <img
+            src="./assets/img-1.jpeg"
+            alt="Бабник жана подкаблучник"
+            onclick="openModal(
+                './assets/img-1.jpeg', 
+                'Бабник жана подкаблучник', 
+                'Комедия',
+                 '14+', 
+                 '80мин', 
+                 '2025',
+                  '11 дек. 2025г', 
+                  'Кыргызстан', 
+                  'Асхат Субанбеков Аскат Сулайманов, Камчы Сарыбаев, Альбина Имашова, Айсалкын Кыйыкбаева, Күмөндөр Абылов, Арнис Кыдырмышев, Саламат Алиев, Гүлзат Мамытбек, Самара Кеңешова жана башкалар.', 'БАБНИК жана ПОДКАБЛУЧНИК тасмасы көптөн бери жолугуша элек эки дос жөнүндөгү үй-бүлөлүк комедия. Айбек бойдокчулуктун доорун сүрүп жатса, Мирлан аялынын сөзүнөн чыкпайт. Керек болсо досторуна дагы жолугууга аялынан уруксат сураган Мирландын жашоосун Айбек көрүп таң калат да, аны чыныгы эркек кылгысы келет. Кызыктын баары ушул жерден башталат. Үй-бүлөнүн баалуулуктарын камтыган бул тасманы 11-декабрдан тарта бардык кинотеатрлардан көрө аласыздар.', 'https://youtu.be/JDyJT2Dij_U')"
+          />
+          <h3>Бабник жана подкаблучник</h3>
+        </div>
+
+        <div class="movie-card">
+          <img
+            src="./assets/img-2.jpeg"
+            onclick="openModal(
+'./assets/img-2.jpeg',
+'Уйдун ээси',
+'Ужастик',
+'18+',
+'81мин',
+'2025',
+'11 дек. 2025 г.',
+'Кыргызстан',
+'Илгиз Куватбек Алмаз Сейитканов Анара Таалайбек кызы Нурсултан Кадыр уулу Асамидин Арыналиев Гузал Айбекова Бекбол Майрамбеков',
+'Популярный блогер Азирет с своей командой отправляется снять репортаж о заброшенном доме, над которым ходят страшные легенды. Впереди героев ждёт погружение в настоящий ужас, где грани между живыми и мёртвыми стираются.',
+'https://youtu.be/tkROxxVRGRI'
+)"
+          />
+          <h3>Уйдун ээси</h3>
+        </div>
+
+        <div class="movie-card">
+          <img
+            src="./assets/img-3.jpeg"
+            onclick="openModal(
+'./assets/img-3.jpeg',
+'Зверополис 2',
+'мультфильм, боевик, комедия, криминал, детектив, приключения, семейный',
+'6+',
+'107 мин',
+'2025',
+'27 нояб. 2025 г.',
+'США',
+'Джаред Буш, Байрон Ховард Джиннифер Гудвин Джейсон Бейтман Ке Хюи Куан Форчун Феймстер Энди Сэмберг Дэвид Стрэтэйрн Идрис Эльба Иветт Николь Браун Кинта Брансон Томми Чонг',
+'Кролик-полицейский Джуди и лис Ник идут по следу загадочной рептилии, чьё прибытие в Зверополис переворачивает жизнь города с ног на голову. Чтобы раскрыть дело, Джуди и Ник вынуждены работать под прикрытием в разных районах города.',
+'https://youtu.be/u9zuucccNg4'
+)"
+          />
+          <h3>Зверополис 2</h3>
+        </div>
+      </div>
+    </section>
+
+    <section class="schedule">
+      <h2>Сеансы на неделю</h2>
+
+      <table class="schedule-table">
+        <tr>
+          <th>Дни</th>
+          <th>Бабник жана подкаблучник</th>
+          <th>Уйдин ээси</th>
+          <th>Зверополис 2</th>
+        </tr>
+
+        <tr>
+          <td>Понедельник</td>
+          <td>12:00 / 18:00</td>
+          <td>15:00 / 21:00</td>
+          <td>10:00 / 14:00</td>
+        </tr>
+
+        <tr>
+          <td>Вторник</td>
+          <td>12:00 / 18:00</td>
+          <td>15:00 / 20:30</td>
+          <td>10:00 / 14:00</td>
+        </tr>
+
+        <tr>
+          <td>Среда</td>
+          <td>12:00 / 18:30</td>
+          <td>15:00 / 21:00</td>
+          <td>10:30 / 14:30</td>
+        </tr>
+
+        <tr>
+          <td>Четверг</td>
+          <td>12:00 / 18:00</td>
+          <td>15:00 / 20:00</td>
+          <td>10:00 / 13:00</td>
+        </tr>
+
+        <tr>
+          <td>Пятница</td>
+          <td>11:30 / 17:30 / 20:30</td>
+          <td>14:00 / 18:00 / 22:00</td>
+          <td>10:00 / 12:30</td>
+        </tr>
+
+        <tr>
+          <td>Суббота</td>
+          <td>10:00 / 14:00 / 18:00</td>
+          <td>12:00 / 16:00 / 20:00</td>
+          <td>09:00 / 11:00 / 15:00</td>
+        </tr>
+
+        <tr>
+          <td>Воскресенье</td>
+          <td>11:00 / 15:00 / 19:00</td>
+          <td>13:00 / 17:00 / 21:00</td>
+          <td>09:30 / 12:00 / 16:30</td>
+        </tr>
+      </table>
+    </section>
+
+    <footer>© 2025 Кинотеатр «Манас», г. Бишкек</footer>
+
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="mImg" />
+        <h3 id="mTitle"></h3>
+        <p id="mGenre"></p>
+        <p id="mAge"></p>
+        <p id="mDuration"></p>
+        <p id="mPremierDate"></p>
+        <p id="mCountry"></p>
+        <p id="mDirector"></p>
+        <p id="mLeadCast"></p>
+        <p id="mDesc"></p>
+        <a id="trailerLink" href="" target="_blank">Посмотреть трейлер</a>
+      </div>
+    </div>
+
+    <script>
+      function openModal(
+        img,
+        title,
+        genre,
+        age,
+        duration,
+        premierDate,
+        country,
+        director,
+        leadCast,
+        desc,
+        trailer
+      ) {
+        modal.style.display = "flex";
+
+        mImg.src = img;
+        mTitle.innerText = title;
+        mGenre.innerHTML = "<b>Жанр:</b> " + genre;
+        mAge.innerHTML = "<b>Возраст:</b> " + age;
+        mDuration.innerHTML = "<b>Продолжительность:</b> " + duration;
+        mPremierDate.innerHTML = "<b>Дата премьеры:</b> " + premierDate;
+        mCountry.innerHTML = "<b>Страна:</b> " + country;
+        mDirector.innerHTML = "<b>Режиссер:</b> " + director;
+        mLeadCast.innerHTML = "<b>В главных ролях:</b> " + leadCast;
+        mDesc.innerHTML = "<b>Описание:</b> " + desc;
+        trailerLink.href = trailer;
+        console.log(trailer);
+      }
+
+      function closeModal() {
+        modal.style.display = "none";
+      }
+
+      modal.onclick = (e) => {
+        if (e.target === modal) closeModal();
+      };
+    </script>
+  </body>
+</html>
